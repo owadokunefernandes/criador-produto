@@ -6,212 +6,529 @@
 <title>Criador de Produto — Base da Riqueza</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
   :root {
-    --gold: #C49A3C; --gold-bg: #2A2210; --gold-dark: #E8C97A; --gold-border: #4A3A18;
-    --bg: #0E0D0B; --bg2: #1A1916; --bg3: #242320;
-    --txt: #F0EDE6; --txt2: #A8A59E; --txt3: #6B6860;
-    --border: rgba(255,255,255,0.10); --border2: rgba(255,255,255,0.18);
-    --radius: 14px; --radius-sm: 8px;
+    --gold: #C49A3C;
+    --gold-bg: #FBF5E8;
+    --gold-dark: #8B6914;
+    --gold-border: #E8D5A0;
+    --bg: #FFFFFF;
+    --bg2: #F7F6F3;
+    --bg3: #F0EEE9;
+    --txt: #1A1916;
+    --txt2: #6B6860;
+    --txt3: #9E9C97;
+    --border: rgba(0,0,0,0.10);
+    --border2: rgba(0,0,0,0.18);
+    --radius: 14px;
+    --radius-sm: 8px;
+    --teal: #0F6E56;
+    --teal-bg: #E1F5EE;
+    --teal-dark: #085041;
+    --success: #3B6D11;
+    --success-bg: #EAF3DE;
   }
+
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #0E0D0B; --bg2: #1A1916; --bg3: #242320;
-      --txt: #F0EDE6; --txt2: #A8A59E; --txt3: #6B6860;
-      --border: rgba(255,255,255,0.10); --border2: rgba(255,255,255,0.18);
-      --gold-bg: #2A2210; --gold-border: #4A3A18;
+      --bg: #1C1B18;
+      --bg2: #242320;
+      --bg3: #2C2B27;
+      --txt: #F0EDE6;
+      --txt2: #A8A59E;
+      --txt3: #6B6860;
+      --border: rgba(255,255,255,0.10);
+      --border2: rgba(255,255,255,0.18);
+      --gold-bg: #2A2210;
+      --gold-border: #4A3A18;
+      --teal-bg: #04342C;
+      --success-bg: #173404;
     }
   }
-  html, body { min-height: 100vh; background: var(--bg); color: var(--txt); font-family: 'Georgia', serif; }
+
+  html, body { min-height: 100vh; background: var(--bg); color: var(--txt); font-family: 'Georgia', 'Times New Roman', serif; }
+
   .shell { max-width: 680px; margin: 0 auto; padding: 0 16px 60px; }
+
   .topbar { padding: 24px 0 20px; display: flex; align-items: center; gap: 12px; border-bottom: 0.5px solid var(--border); margin-bottom: 32px; }
   .logo-mark { width: 36px; height: 36px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .logo-mark svg { width: 18px; height: 18px; }
-  .brand { font-family: 'Georgia', serif; font-size: 15px; color: var(--txt); }
-  .brand span { color: var(--txt2); font-size: 13px; display: block; margin-top: 1px; font-family: -apple-system, sans-serif; }
-  .progress-bar { height: 2px; background: var(--bg3); border-radius: 2px; margin-bottom: 28px; }
-  .progress-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.4s ease; }
-  .phase-indicator { display: flex; align-items: center; margin-bottom: 28px; }
-  .phase-dot { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--border2); background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--txt3); flex-shrink: 0; transition: all 0.3s; font-family: -apple-system, sans-serif; }
+  .logo-mark svg { width: 18px; height: 18px; fill: #fff; }
+  .brand { font-family: 'Georgia', serif; font-size: 15px; font-weight: normal; color: var(--txt); letter-spacing: 0.01em; }
+  .brand span { color: var(--txt2); font-size: 13px; display: block; margin-top: 1px; }
+
+  .phase-indicator { display: flex; align-items: center; gap: 0; margin-bottom: 28px; }
+  .phase-dot { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--border2); background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--txt3); flex-shrink: 0; transition: all 0.3s; font-family: 'Georgia', serif; }
   .phase-dot.done { background: var(--gold); border-color: var(--gold); color: #fff; }
   .phase-dot.active { background: var(--txt); border-color: var(--txt); color: var(--bg); }
   .phase-line { flex: 1; height: 1px; background: var(--border); }
   .phase-line.done { background: var(--gold); }
+
   .screen { display: none; }
   .screen.active { display: block; }
-  h1 { font-size: 26px; font-weight: normal; line-height: 1.3; margin-bottom: 8px; }
-  .subtitle { font-size: 15px; color: var(--txt2); line-height: 1.6; margin-bottom: 28px; font-family: -apple-system, sans-serif; }
-  label { display: block; font-size: 12px; color: var(--txt2); margin-bottom: 6px; font-family: -apple-system, sans-serif; letter-spacing: 0.05em; text-transform: uppercase; }
-  input[type=text], textarea { width: 100%; padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border2); background: var(--bg); color: var(--txt); font-size: 15px; font-family: -apple-system, sans-serif; outline: none; transition: border-color 0.15s; resize: none; line-height: 1.5; -webkit-appearance: none; }
-  input[type=text]:focus, textarea:focus { border-color: var(--gold); }
+
+  h1 { font-size: 26px; font-weight: normal; color: var(--txt); line-height: 1.3; margin-bottom: 8px; font-family: 'Georgia', serif; }
+  .subtitle { font-size: 15px; color: var(--txt2); line-height: 1.6; margin-bottom: 28px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+  label { display: block; font-size: 13px; color: var(--txt2); margin-bottom: 6px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; letter-spacing: 0.03em; text-transform: uppercase; }
+
+  input[type=text], textarea, select {
+    width: 100%; padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border2);
+    background: var(--bg); color: var(--txt); font-size: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    outline: none; transition: border-color 0.15s; resize: none; line-height: 1.5;
+    -webkit-appearance: none;
+  }
+  input[type=text]:focus, textarea:focus, select:focus { border-color: var(--gold); }
   textarea { min-height: 90px; }
+
   .field { margin-bottom: 20px; }
+
   .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-  .chip { padding: 8px 14px; border-radius: 20px; border: 1px solid var(--border2); font-size: 13px; color: var(--txt2); cursor: pointer; transition: all 0.15s; font-family: -apple-system, sans-serif; background: var(--bg); -webkit-tap-highlight-color: transparent; user-select: none; }
+  .chip { padding: 8px 14px; border-radius: 20px; border: 1px solid var(--border2); font-size: 13px; color: var(--txt2); cursor: pointer; transition: all 0.15s; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); -webkit-tap-highlight-color: transparent; user-select: none; }
   .chip:active { transform: scale(0.97); }
   .chip.on { background: var(--gold-bg); border-color: var(--gold); color: var(--gold-dark); }
+
   .add-row { display: flex; gap: 8px; margin-top: 8px; }
   .add-row input { flex: 1; }
-  .btn-add { padding: 0 16px; height: 46px; border-radius: var(--radius-sm); border: 1px solid var(--border2); background: var(--bg2); color: var(--txt); font-size: 15px; cursor: pointer; flex-shrink: 0; font-family: -apple-system, sans-serif; }
+  .btn-add { padding: 0 16px; height: 44px; border-radius: var(--radius-sm); border: 1px solid var(--border2); background: var(--bg2); color: var(--txt); font-size: 15px; cursor: pointer; flex-shrink: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
   .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; min-height: 10px; }
-  .tag { display: flex; align-items: center; gap: 6px; padding: 6px 10px 6px 12px; border-radius: 20px; background: var(--bg2); border: 1px solid var(--border); font-size: 13px; color: var(--txt); font-family: -apple-system, sans-serif; }
-  .tag-x { cursor: pointer; color: var(--txt3); font-size: 18px; line-height: 1; }
+  .tag { display: flex; align-items: center; gap: 6px; padding: 6px 10px 6px 12px; border-radius: 20px; background: var(--bg2); border: 1px solid var(--border); font-size: 13px; color: var(--txt); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .tag-x { cursor: pointer; color: var(--txt3); font-size: 16px; line-height: 1; }
+
   .range-row { display: flex; align-items: center; gap: 12px; }
-  .range-row input[type=range] { flex: 1; height: 4px; cursor: pointer; accent-color: var(--gold); }
-  .range-val { font-size: 14px; font-weight: 500; min-width: 36px; text-align: right; font-family: -apple-system, sans-serif; }
-  .btn { display: block; width: 100%; padding: 15px; border-radius: var(--radius-sm); border: none; font-size: 15px; font-weight: 500; cursor: pointer; transition: opacity 0.15s; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-  .btn-primary { background: var(--gold); color: #fff; margin-top: 8px; }
+  .range-row input[type=range] { flex: 1; }
+  .range-val { font-size: 14px; font-weight: 500; min-width: 36px; text-align: right; color: var(--txt); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+  .btn { display: block; width: 100%; padding: 15px; border-radius: var(--radius-sm); border: none; font-size: 15px; font-weight: 500; cursor: pointer; transition: opacity 0.15s; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
+  .btn-primary { background: var(--gold); color: #fff; }
   .btn-primary:active { opacity: 0.85; }
   .btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--txt2); margin-top: 10px; }
   .btn-ghost:active { background: var(--bg2); }
-  .loading-box { background: var(--bg2); border-radius: var(--radius); padding: 40px 24px; text-align: center; margin: 20px 0; }
-  .spinner { width: 34px; height: 34px; border: 2.5px solid var(--border2); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 18px; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-txt { font-size: 14px; color: var(--txt2); font-family: -apple-system, sans-serif; }
-  .loading-sub { font-size: 12px; color: var(--txt3); margin-top: 6px; font-family: -apple-system, sans-serif; }
-  .result-block { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
-  .result-block h2 { font-size: 17px; font-weight: normal; font-family: 'Georgia', serif; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
-  .result-block p, .result-block li { font-size: 14px; color: var(--txt2); line-height: 1.75; font-family: -apple-system, sans-serif; }
-  .result-block ul, .result-block ol { padding-left: 20px; margin-top: 8px; }
-  .result-block li { margin-bottom: 5px; }
-  .result-block strong { color: var(--txt); font-weight: 500; }
-  .highlight-box { background: var(--gold-bg); border: 1px solid var(--gold-border); border-radius: var(--radius-sm); padding: 16px; margin: 4px 0; }
-  .highlight-box p { color: var(--gold-dark); font-size: 15px; line-height: 1.6; font-family: 'Georgia', serif; font-style: italic; }
-  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 500; font-family: -apple-system, sans-serif; letter-spacing: 0.04em; text-transform: uppercase; }
-  .badge-gold { background: var(--gold-bg); color: var(--gold-dark); border: 1px solid var(--gold-border); }
+  .btn:disabled { opacity: 0.4; pointer-events: none; }
+
   .divider { height: 1px; background: var(--border); margin: 24px 0; }
-  .error-box { background: #FCEBEB; border: 1px solid #F09595; border-radius: var(--radius-sm); padding: 16px; margin: 16px 0; }
-  .error-box p { font-size: 14px; color: #791F1F; font-family: -apple-system, sans-serif; line-height: 1.5; }
-  @media (max-width: 480px) { h1 { font-size: 22px; } .shell { padding: 0 14px 60px; } }
+
+  .loading-box { background: var(--bg2); border-radius: var(--radius); padding: 32px 24px; text-align: center; margin: 20px 0; }
+  .spinner { width: 32px; height: 32px; border: 2.5px solid var(--border2); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-txt { font-size: 14px; color: var(--txt2); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+  .result-block { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; }
+  .result-block h2 { font-size: 18px; font-weight: normal; color: var(--txt); font-family: 'Georgia', serif; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+  .result-block p, .result-block li { font-size: 14px; color: var(--txt2); line-height: 1.7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .result-block ul, .result-block ol { padding-left: 20px; margin-top: 8px; }
+  .result-block li { margin-bottom: 6px; }
+  .result-block strong { color: var(--txt); font-weight: 500; }
+
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; letter-spacing: 0.04em; text-transform: uppercase; }
+  .badge-gold { background: var(--gold-bg); color: var(--gold-dark); border: 1px solid var(--gold-border); }
+
+  .highlight-box { background: var(--gold-bg); border: 1px solid var(--gold-border); border-radius: var(--radius-sm); padding: 14px 16px; margin: 16px 0; }
+  .highlight-box p { color: var(--gold-dark); font-size: 14px; line-height: 1.6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+  .progress-bar { height: 2px; background: var(--bg3); border-radius: 2px; margin-bottom: 32px; }
+  .progress-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.4s ease; }
+
+  .error-msg { font-size: 13px; color: #A32D2D; padding: 10px 14px; background: #FCEBEB; border-radius: var(--radius-sm); margin-top: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 22px; }
+    .shell { padding: 0 14px 60px; }
+    .topbar { padding: 18px 0 16px; }
+  }
 </style>
 </head>
 <body>
 <div class="shell">
+
   <div class="topbar">
     <div class="logo-mark">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-        <polyline points="17 6 23 6 23 12"></polyline>
-      </svg>
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
     </div>
     <div class="brand">Base da Riqueza <span>Criador de produto</span></div>
   </div>
+
   <div class="progress-bar"><div class="progress-fill" id="pbar" style="width:0%"></div></div>
-  <div class="phase-indicator">
-    <div class="phase-dot active" id="pd1">1</div><div class="phase-line" id="pl1"></div>
-    <div class="phase-dot" id="pd2">2</div><div class="phase-line" id="pl2"></div>
-    <div class="phase-dot" id="pd3">3</div><div class="phase-line" id="pl3"></div>
-    <div class="phase-dot" id="pd4">4</div><div class="phase-line" id="pl4"></div>
+
+  <div class="phase-indicator" id="phases">
+    <div class="phase-dot active" id="pd1">1</div>
+    <div class="phase-line" id="pl1"></div>
+    <div class="phase-dot" id="pd2">2</div>
+    <div class="phase-line" id="pl2"></div>
+    <div class="phase-dot" id="pd3">3</div>
+    <div class="phase-line" id="pl3"></div>
+    <div class="phase-dot" id="pd4">4</div>
+    <div class="phase-line" id="pl4"></div>
     <div class="phase-dot" id="pd5">5</div>
   </div>
+
   <div class="screen active" id="s1">
     <h1>Quem é você e o que você faz?</h1>
-    <p class="subtitle">Quanto mais específico você for, melhor será o resultado.</p>
-    <div class="field"><label>Seu nome</label><input type="text" id="nome" placeholder="Ex: Ana Lima" maxlength="60"></div>
-    <div class="field"><label>O que você faz hoje?</label><textarea id="bio" placeholder="Ex: Sou fisioterapeuta com 10 anos de experiência em reabilitação de atletas." maxlength="400"></textarea></div>
+    <p class="subtitle">Vamos começar pelo começo. Quanto mais honesto e específico você for, melhor será o resultado.</p>
     <div class="field">
-      <label>Sua área</label>
+      <label>Seu nome ou como quer ser chamado</label>
+      <input type="text" id="nome" placeholder="Ex: Ana Lima" maxlength="60">
+    </div>
+    <div class="field">
+      <label>Em poucas palavras, o que você faz hoje?</label>
+      <textarea id="bio" placeholder="Ex: Sou fisioterapeuta com 10 anos de experiência em reabilitação de atletas. Trabalho em clínica própria e atendo particulares." maxlength="400"></textarea>
+    </div>
+    <div class="field">
+      <label>Qual é a sua área ou setor?</label>
       <div class="chips" id="area-chips">
-        <div class="chip" onclick="toggleChip(this)">Saúde</div><div class="chip" onclick="toggleChip(this)">Finanças</div>
-        <div class="chip" onclick="toggleChip(this)">Negócios</div><div class="chip" onclick="toggleChip(this)">Educação</div>
-        <div class="chip" onclick="toggleChip(this)">Tecnologia</div><div class="chip" onclick="toggleChip(this)">Marketing</div>
-        <div class="chip" onclick="toggleChip(this)">Direito</div><div class="chip" onclick="toggleChip(this)">Bem-estar</div>
-        <div class="chip" onclick="toggleChip(this)">Arte & Criatividade</div><div class="chip" onclick="toggleChip(this)">Outro</div>
+        <div class="chip" onclick="toggleChip(this,'area')">Saúde</div>
+        <div class="chip" onclick="toggleChip(this,'area')">Finanças</div>
+        <div class="chip" onclick="toggleChip(this,'area')">Negócios</div>
+        <div class="chip" onclick="toggleChip(this,'area')">Educação</div>
+        <div class="chip" onclick="toggleChip(this,'area')">Tecnologia</div>
+        <div class="chip" onclick="toggleChip(this,'area')">Marketing</div>
+        <div class="chip" onclick="toggleChip(this,'area')">Direito</div>
+        <div class="chip" onclick="toggleChip(this,'area')">Bem-estar</div>
+        <div class="chip" onclick="toggleChip(this,'area')">Arte & Criatividade</div>
+        <div class="chip" onclick="toggleChip(this,'area')">Outro</div>
       </div>
     </div>
     <button class="btn btn-primary" onclick="goTo(2)">Continuar</button>
   </div>
+
   <div class="screen" id="s2">
     <h1>O que você sabe e já fez?</h1>
-    <p class="subtitle">O que parece óbvio para você tem muito valor para outras pessoas.</p>
-    <div class="field"><label>Resultados que você já obteve</label><textarea id="resultados" placeholder="Ex: Ajudei mais de 80 atletas a voltarem às competições sem cirurgia." maxlength="600"></textarea></div>
+    <p class="subtitle">Vamos mapear o seu conhecimento real. Não subestime o que parece óbvio para você — para outros, tem muito valor.</p>
     <div class="field">
-      <label>Suas habilidades específicas</label>
-      <div class="add-row"><input type="text" id="skill-input" placeholder="Ex: Pilates terapêutico" maxlength="80" onkeydown="if(event.key==='Enter'){addTag('skills','skill-input');event.preventDefault()}"><button class="btn-add" onclick="addTag('skills','skill-input')">+ Add</button></div>
+      <label>Quais resultados você já conseguiu para si mesmo ou outros?</label>
+      <textarea id="resultados" placeholder="Ex: Ajudei mais de 80 atletas a voltarem às competições sem cirurgia. Recuperei minha própria joelho após ruptura do LCA em 6 meses." maxlength="600"></textarea>
+    </div>
+    <div class="field">
+      <label>Quais habilidades específicas você tem? <span style="font-weight:normal;text-transform:none;font-size:11px;">(adicione uma por vez)</span></label>
+      <div class="add-row">
+        <input type="text" id="skill-input" placeholder="Ex: Pilates terapêutico" maxlength="80" onkeydown="if(event.key==='Enter'){addTag('skills','skill-input');event.preventDefault()}">
+        <button class="btn-add" onclick="addTag('skills','skill-input')">+ Add</button>
+      </div>
       <div class="tag-list" id="skills"></div>
     </div>
     <div class="field">
-      <label>Problemas que você sabe resolver</label>
-      <div class="add-row"><input type="text" id="prob-input" placeholder="Ex: Dor crônica sem diagnóstico claro" maxlength="100" onkeydown="if(event.key==='Enter'){addTag('probs','prob-input');event.preventDefault()}"><button class="btn-add" onclick="addTag('probs','prob-input')">+ Add</button></div>
+      <label>Que problemas você sabe resolver que outros ainda têm dificuldade?</label>
+      <div class="add-row">
+        <input type="text" id="prob-input" placeholder="Ex: Dor crônica sem diagnóstico claro" maxlength="100" onkeydown="if(event.key==='Enter'){addTag('probs','prob-input');event.preventDefault()}">
+        <button class="btn-add" onclick="addTag('probs','prob-input')">+ Add</button>
+      </div>
       <div class="tag-list" id="probs"></div>
     </div>
     <button class="btn btn-primary" onclick="goTo(3)">Continuar</button>
     <button class="btn btn-ghost" onclick="goTo(1)">Voltar</button>
   </div>
+
   <div class="screen" id="s3">
     <h1>Para quem você quer criar isso?</h1>
-    <p class="subtitle">Conhecimento vira produto quando tem um destinatário claro.</p>
-    <div class="field"><label>Quem mais se beneficiaria do que você sabe?</label><textarea id="publico" placeholder="Ex: Pessoas entre 30-50 anos com lesão por esforço repetitivo que querem evitar cirurgia." maxlength="500"></textarea></div>
+    <p class="subtitle">Entender quem vai consumir ou contratar você é o que transforma conhecimento em produto com demanda real.</p>
     <div class="field">
-      <label>O que essa pessoa enfrenta hoje?</label>
-      <div class="add-row"><input type="text" id="dor-input" placeholder="Ex: Dor que atrapalha o trabalho e o sono" maxlength="100" onkeydown="if(event.key==='Enter'){addTag('dores','dor-input');event.preventDefault()}"><button class="btn-add" onclick="addTag('dores','dor-input')">+ Add</button></div>
+      <label>Quem é a pessoa que mais se beneficiaria do que você sabe?</label>
+      <textarea id="publico" placeholder="Ex: Pessoas entre 30-50 anos com lesão por esforço repetitivo, que trabalham no computador e querem evitar cirurgia." maxlength="500"></textarea>
+    </div>
+    <div class="field">
+      <label>O que essa pessoa sente ou enfrenta hoje?</label>
+      <div class="add-row">
+        <input type="text" id="dor-input" placeholder="Ex: Dor que atrapalha o trabalho e o sono" maxlength="100" onkeydown="if(event.key==='Enter'){addTag('dores','dor-input');event.preventDefault()}">
+        <button class="btn-add" onclick="addTag('dores','dor-input')">+ Add</button>
+      </div>
       <div class="tag-list" id="dores"></div>
     </div>
-    <div class="field"><label>Qual transformação essa pessoa quer?</label><textarea id="transformacao" placeholder="Ex: Voltar a se exercitar sem dor e sem cirurgia." maxlength="400"></textarea></div>
+    <div class="field">
+      <label>Qual transformação essa pessoa quer chegar?</label>
+      <textarea id="transformacao" placeholder="Ex: Quer voltar a se exercitar sem dor, ter qualidade de vida e não precisar de cirurgia." maxlength="400"></textarea>
+    </div>
     <button class="btn btn-primary" onclick="goTo(4)">Continuar</button>
     <button class="btn btn-ghost" onclick="goTo(2)">Voltar</button>
   </div>
+
   <div class="screen" id="s4">
     <h1>Como você quer entregar e cobrar?</h1>
-    <p class="subtitle">O formato certo multiplica o valor percebido.</p>
+    <p class="subtitle">O formato certo multiplica o valor percebido. Escolha o que faz mais sentido para você e sua audiência.</p>
     <div class="field">
-      <label>Tipo de produto ou serviço</label>
+      <label>Que tipo de produto ou serviço você quer criar?</label>
       <div class="chips" id="tipo-chips">
-        <div class="chip" onclick="toggleChip(this)">Curso online</div><div class="chip" onclick="toggleChip(this)">Mentoria individual</div>
-        <div class="chip" onclick="toggleChip(this)">Grupo de mentoria</div><div class="chip" onclick="toggleChip(this)">Consultoria</div>
-        <div class="chip" onclick="toggleChip(this)">Ebook / guia</div><div class="chip" onclick="toggleChip(this)">Workshop presencial</div>
-        <div class="chip" onclick="toggleChip(this)">Workshop online</div><div class="chip" onclick="toggleChip(this)">Comunidade / assinatura</div>
-        <div class="chip" onclick="toggleChip(this)">Serviço profissional</div><div class="chip" onclick="toggleChip(this)">Ainda não sei</div>
+        <div class="chip" onclick="toggleChip(this,'tipo')">Curso online</div>
+        <div class="chip" onclick="toggleChip(this,'tipo')">Mentoria individual</div>
+        <div class="chip" onclick="toggleChip(this,'tipo')">Grupo de mentoria</div>
+        <div class="chip" onclick="toggleChip(this,'tipo')">Consultoria</div>
+        <div class="chip" onclick="toggleChip(this,'tipo')">Ebook / guia</div>
+        <div class="chip" onclick="toggleChip(this,'tipo')">Workshop presencial</div>
+        <div class="chip" onclick="toggleChip(this,'tipo')">Workshop online</div>
+        <div class="chip" onclick="toggleChip(this,'tipo')">Comunidade / assinatura</div>
+        <div class="chip" onclick="toggleChip(this,'tipo')">Serviço profissional</div>
+        <div class="chip" onclick="toggleChip(this,'tipo')">Ainda não sei</div>
       </div>
     </div>
     <div class="field">
-      <label>Experiência com produtos digitais</label>
+      <label>Qual é o seu nível de experiência com venda de produtos digitais?</label>
       <div class="chips" id="exp-chips">
-        <div class="chip" onclick="toggleChipSingle(this,'exp-chips')">Nunca fiz</div>
-        <div class="chip" onclick="toggleChipSingle(this,'exp-chips')">Já testei algo</div>
-        <div class="chip" onclick="toggleChipSingle(this,'exp-chips')">Tenho produto rodando</div>
+        <div class="chip" onclick="toggleChip(this,'exp')">Nunca fiz</div>
+        <div class="chip" onclick="toggleChip(this,'exp')">Já testei algo</div>
+        <div class="chip" onclick="toggleChip(this,'exp')">Tenho produto rodando</div>
       </div>
     </div>
     <div class="field">
-      <label>Tempo disponível por semana</label>
-      <div class="range-row"><input type="range" min="1" max="40" value="5" step="1" id="tempo-range" oninput="document.getElementById('tempo-val').textContent=this.value+'h'"><span class="range-val" id="tempo-val">5h</span></div>
+      <label>Quanto tempo por semana você teria para dedicar?</label>
+      <div class="range-row">
+        <input type="range" min="1" max="40" value="5" step="1" id="tempo-range" oninput="document.getElementById('tempo-val').textContent=this.value+'h'">
+        <span class="range-val" id="tempo-val">5h</span>
+      </div>
     </div>
-    <div class="field"><label>Pretensão de preço (opcional)</label><input type="text" id="preco" placeholder="Ex: R$ 297, ou ainda não sei" maxlength="60"></div>
+    <div class="field">
+      <label>Pretensão de preço (opcional)</label>
+      <input type="text" id="preco" placeholder="Ex: R$ 297, ou ainda não sei" maxlength="60">
+    </div>
     <button class="btn btn-primary" onclick="gerarProduto()">Gerar meu produto com IA</button>
     <button class="btn btn-ghost" onclick="goTo(3)">Voltar</button>
   </div>
+
   <div class="screen" id="s5">
     <div id="loading-area" class="loading-box">
       <div class="spinner"></div>
       <div class="loading-txt" id="loading-txt">Analisando seu perfil...</div>
-      <div class="loading-sub">Isso leva alguns segundos</div>
     </div>
     <div id="resultado-area" style="display:none">
       <div id="resultado-conteudo"></div>
       <div class="divider"></div>
       <button class="btn btn-primary" onclick="goTo(1)">Criar outro produto</button>
-      <button class="btn btn-ghost" onclick="regenerar()">Gerar nova versão</button>
+      <button class="btn btn-ghost" style="margin-top:10px" onclick="regenerar()">Gerar nova versão</button>
     </div>
   </div>
+
 </div>
+
 <script>
-var state={nome:'',bio:'',area:[],resultados:'',skills:[],probs:[],publico:'',dores:[],transformacao:'',tipos:[],exp:[],tempo:5,preco:''};
-var current=1;
-function goTo(n){if(n>current&&!validateScreen(current))return;document.getElementById('s'+current).classList.remove('active');current=n;document.getElementById('s'+current).classList.add('active');updateProgress();window.scrollTo(0,0);}
-function updateProgress(){document.getElementById('pbar').style.width=((current-1)/4*100)+'%';for(var i=1;i<=5;i++){var d=document.getElementById('pd'+i);d.className='phase-dot'+(i<current?' done':i===current?' active':'');if(i<5)document.getElementById('pl'+i).className='phase-line'+(i<current?' done':'');}}
-function validateScreen(n){if(n===1){var nome=document.getElementById('nome').value.trim(),bio=document.getElementById('bio').value.trim();if(!nome||!bio){alert('Preencha seu nome e o que você faz.');return false;}state.nome=nome;state.bio=bio;state.area=getChips('area-chips');}if(n===2){var res=document.getElementById('resultados').value.trim();if(!res){alert('Descreva pelo menos um resultado.');return false;}state.resultados=res;state.skills=getTags('skills');state.probs=getTags('probs');}if(n===3){var pub=document.getElementById('publico').value.trim(),transf=document.getElementById('transformacao').value.trim();if(!pub||!transf){alert('Descreva para quem é e qual transformação.');return false;}state.publico=pub;state.transformacao=transf;state.dores=getTags('dores');}if(n===4){state.tipos=getChips('tipo-chips');state.exp=getChips('exp-chips');state.tempo=parseInt(document.getElementById('tempo-range').value);state.preco=document.getElementById('preco').value.trim();}return true;}
-function toggleChip(el){el.classList.toggle('on');}
-function toggleChipSingle(el,id){document.getElementById(id).querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');}
-function getChips(id){var r=[];document.getElementById(id).querySelectorAll('.chip.on').forEach(function(c){r.push(c.textContent.trim());});return r;}
-function addTag(listId,inputId){var input=document.getElementById(inputId),val=input.value.trim();if(!val)return;var tag=document.createElement('div');tag.className='tag';tag.innerHTML='<span>'+val+'</span><span class="tag-x" onclick="this.parentNode.remove()">×</span>';document.getElementById(listId).appendChild(tag);input.value='';input.focus();}
-function getTags(listId){var r=[];document.getElementById(listId).querySelectorAll('.tag span:first-child').forEach(function(s){r.push(s.textContent.trim());});return r;}
-function buildPrompt(){var p='Você é especialista em criação de produtos educacionais e infoprodutos. Com base no perfil abaixo, crie um plano completo.\n\n';p+='## Perfil\nNome: '+state.nome+'\nO que faz: '+state.bio+'\n';if(state.area.length)p+='Área: '+state.area.join(', ')+'\n';p+='\n## Repertório\nResultados: '+state.resultados+'\n';if(state.skills.length)p+='Habilidades: '+state.skills.join(', ')+'\n';if(state.probs.length)p+='Problemas que resolve: '+state.probs.join(', ')+'\n';p+='\n## Público\nQuem é: '+state.publico+'\n';if(state.dores.length)p+='Dores: '+state.dores.join(', ')+'\n';p+='Transformação: '+state.transformacao+'\n';p+='\n## Formato\n';if(state.tipos.length)p+='Tipo: '+state.tipos.join(', ')+'\n';if(state.exp.length)p+='Experiência: '+state.exp.join(', ')+'\n';p+='Disponibilidade: '+state.tempo+'h/semana\n';if(state.preco)p+='Preço: '+state.preco+'\n';p+='\n## Responda APENAS nesta estrutura:\n### Nome do produto\n### Posicionamento em uma frase\n### Por que faz sentido você criar\n### Para quem é\n### O que o cliente aprende ou consegue\n### Estrutura sugerida\n### Como vender antes de criar\n### Próximo passo imediato\n\nSeja específico. Português do Brasil.';return p;}
-var msgs=['Analisando seu repertório...','Identificando seu ativo mais valioso...','Mapeando oportunidades...','Estruturando o plano...','Finalizando recomendações...'];
-var mi=0,miv=null;
-function startMsgs(){mi=0;document.getElementById('loading-txt').textContent=msgs[0];miv=setInterval(function(){mi=(mi+1)%msgs.length;document.getElementById('loading-txt').textContent=msgs[mi];},3000);}
-function stopMsgs(){if(miv)clearInterval(miv);}pMsgs(){if(miv)clearInterval(miv);}
-async function gerarProduto(){if(!validateScreen(4))return;goTo(5);document.getElementById('loading-area').style.display='block';document.getElementById('resultado-area').style.display='none';startMsgs();try{var resp=await fetch('/api/gerar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:buildPrompt()}),signal:AbortSignal.timeout(120000)});var data=await resp.json();stopMsgs();if(!resp.ok||!data.content||!data.content[0]){var errMsg=typeof data.error==='object'?JSON.stringify(data.error):(data.error||JSON.stringify(data));throw new Error(errMsg);}renderResultado(data.content[0].text);}catch(e){stopMsgs();document.getElementById('loading-area').style.display='none';document.getElementById('resultado-conteudo').innerHTML='<div class="error-box"><p>Erro: '+e.message+'</p></div>';document.getElementById('resultado-area').style.display='block';}}async function regenerar(){document.getElementById('loading-area').style.display='block';document.getElementById('resultado-area').style.display='none';await gerarProduto();}
-function parseMd(text){text=text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');var lines=text.split('\n'),html='',inUl=false;for(var i=0;i<lines.length;i++){var l=lines[i].trim();if(!l){if(inUl){html+='</ul>';inUl=false;}continue;}if(l.startsWith('- ')||l.match(/^\d+\. /)){if(!inUl){html+='<ul>';inUl=true;}html+='<li>'+l.replace(/^- |^\d+\. /,'')+'</li>';}else{if(inUl){html+='</ul>';inUl=false;}html+='<p>'+l+'</p>';}}if(inUl)html+='</ul>';return html;}
-function renderResultado(text){document.getElementById('loading-area').style.display='none';var sections=text.split(/###\s+/).filter(function(s){return s.trim();});var html='<div style="margin-bottom:20px"><span class="badge badge-gold">Seu produto criado com IA</span></div>';sections.forEach(function(sec,idx){var lines=sec.split('\n'),title=lines[0].trim(),body=lines.slice(1).join('\n').trim();if(!title||!body)return;html+='<div class="result-block"><h2>'+title+'</h2>';if(idx===0)html+='<div class="highlight-box"><p>'+body+'</p></div>';else html+=parseMd(body);html+='</div>';});html+='<div class="result-block" style="background:var(--gold-bg);border-color:var(--gold-border)"><h2 style="color:var(--gold-dark)">Salve seu resultado</h2><p style="color:var(--gold-dark)">Copie este plano e cole no seu documento. Agora é hora de executar o próximo passo.</p></div>';document.getElementById('resultado-conteudo').innerHTML=html;document.getElementById('resultado-area').style.display='block';window.scrollTo(0,0);}
+var state = {
+  nome: '', bio: '', area: [], resultados: '',
+  skills: [], probs: [], publico: '', dores: [],
+  transformacao: '', tipos: [], exp: [], tempo: 5, preco: ''
+};
+var current = 1;
+var totalScreens = 5;
+
+function goTo(n) {
+  if (n > 1 && !validateScreen(current)) return;
+  document.getElementById('s' + current).classList.remove('active');
+  current = n;
+  document.getElementById('s' + current).classList.add('active');
+  updateProgress();
+  window.scrollTo(0, 0);
+}
+
+function updateProgress() {
+  var pct = ((current - 1) / (totalScreens - 1)) * 100;
+  document.getElementById('pbar').style.width = pct + '%';
+  for (var i = 1; i <= 5; i++) {
+    var dot = document.getElementById('pd' + i);
+    dot.classList.remove('active', 'done');
+    if (i < current) dot.classList.add('done');
+    else if (i === current) dot.classList.add('active');
+    if (i < 5) {
+      var line = document.getElementById('pl' + i);
+      line.classList.toggle('done', i < current);
+    }
+  }
+}
+
+function validateScreen(n) {
+  if (n === 1) {
+    var nome = document.getElementById('nome').value.trim();
+    var bio = document.getElementById('bio').value.trim();
+    if (!nome || !bio) { alert('Preencha seu nome e o que você faz para continuar.'); return false; }
+    state.nome = nome; state.bio = bio;
+    state.area = getChips('area-chips');
+  }
+  if (n === 2) {
+    var res = document.getElementById('resultados').value.trim();
+    if (!res) { alert('Descreva pelo menos um resultado que você já obteve.'); return false; }
+    state.resultados = res;
+    state.skills = getTags('skills');
+    state.probs = getTags('probs');
+  }
+  if (n === 3) {
+    var pub = document.getElementById('publico').value.trim();
+    var transf = document.getElementById('transformacao').value.trim();
+    if (!pub || !transf) { alert('Descreva para quem é e qual transformação você gera.'); return false; }
+    state.publico = pub; state.transformacao = transf;
+    state.dores = getTags('dores');
+  }
+  if (n === 4) {
+    state.tipos = getChips('tipo-chips');
+    state.exp = getChips('exp-chips');
+    state.tempo = parseInt(document.getElementById('tempo-range').value);
+    state.preco = document.getElementById('preco').value.trim();
+  }
+  return true;
+}
+
+function toggleChip(el, group) {
+  var isMulti = (group !== 'exp');
+  if (!isMulti) {
+    el.closest('.chips').querySelectorAll('.chip').forEach(function(c) { c.classList.remove('on'); });
+  }
+  el.classList.toggle('on');
+}
+
+function getChips(containerId) {
+  var result = [];
+  document.getElementById(containerId).querySelectorAll('.chip.on').forEach(function(c) { result.push(c.textContent.trim()); });
+  return result;
+}
+
+function addTag(listId, inputId) {
+  var input = document.getElementById(inputId);
+  var val = input.value.trim();
+  if (!val) return;
+  var list = document.getElementById(listId);
+  var tag = document.createElement('div');
+  tag.className = 'tag';
+  tag.innerHTML = '<span>' + val + '</span><span class="tag-x" onclick="this.parentNode.remove()">×</span>';
+  list.appendChild(tag);
+  input.value = '';
+  input.focus();
+}
+
+function getTags(listId) {
+  var result = [];
+  document.getElementById(listId).querySelectorAll('.tag span:first-child').forEach(function(s) { result.push(s.textContent.trim()); });
+  return result;
+}
+
+function buildPrompt() {
+  var p = 'Você é um especialista em criação de produtos educacionais, infoprodutos e serviços de alto valor. Com base no perfil abaixo, crie um plano de produto completo.\n\n';
+  p += '## Perfil do criador\n';
+  p += 'Nome: ' + state.nome + '\n';
+  p += 'O que faz: ' + state.bio + '\n';
+  if (state.area.length) p += 'Área: ' + state.area.join(', ') + '\n';
+  p += '\n## Repertório e resultados\n';
+  p += 'Resultados obtidos: ' + state.resultados + '\n';
+  if (state.skills.length) p += 'Habilidades específicas: ' + state.skills.join(', ') + '\n';
+  if (state.probs.length) p += 'Problemas que sabe resolver: ' + state.probs.join(', ') + '\n';
+  p += '\n## Público e transformação\n';
+  p += 'Público-alvo: ' + state.publico + '\n';
+  if (state.dores.length) p += 'Dores do público: ' + state.dores.join(', ') + '\n';
+  p += 'Transformação desejada: ' + state.transformacao + '\n';
+  p += '\n## Formato e contexto\n';
+  if (state.tipos.length) p += 'Tipo de produto desejado: ' + state.tipos.join(', ') + '\n';
+  if (state.exp.length) p += 'Experiência com produtos digitais: ' + state.exp.join(', ') + '\n';
+  p += 'Disponibilidade semanal: ' + state.tempo + ' horas\n';
+  if (state.preco) p += 'Pretensão de preço: ' + state.preco + '\n';
+  p += '\n## Sua tarefa\n';
+  p += 'Com base nesse perfil, crie um plano de produto detalhado com EXATAMENTE esta estrutura em Markdown:\n\n';
+  p += '### Nome do produto\n[Um nome atraente e específico para o produto]\n\n';
+  p += '### Posicionamento em uma frase\n[A promessa central do produto em uma frase direta e poderosa]\n\n';
+  p += '### Por que esse produto faz sentido para você criar\n[3-4 razões baseadas no repertório específico dessa pessoa]\n\n';
+  p += '### Para quem é (perfil do cliente ideal)\n[Descrição precisa de quem vai comprar, incluindo situação atual e aspiração]\n\n';
+  p += '### O que o cliente aprende ou consegue\n[Lista de 5-7 resultados concretos que o cliente obtém]\n\n';
+  p += '### Estrutura sugerida do produto\n[Módulos, sessões ou etapas — o que faz sentido para o formato escolhido]\n\n';
+  p += '### Como vender antes de criar\n[Estratégia de validação e pré-venda, adaptada ao nível de experiência]\n\n';
+  p += '### Próximo passo imediato\n[Uma ação específica que essa pessoa pode fazer hoje para começar]\n\n';
+  p += 'Seja específico, use detalhes do perfil, e escreva em português do Brasil. Não escreva nada além da estrutura pedida.';
+  return p;
+}
+
+var loadingMessages = [
+  'Analisando seu repertório...',
+  'Identificando seu ativo mais valioso...',
+  'Mapeando oportunidades de produto...',
+  'Estruturando seu plano de produto...',
+  'Finalizando recomendações...'
+];
+var msgIdx = 0;
+var msgInterval = null;
+
+function startLoadingMessages() {
+  msgIdx = 0;
+  document.getElementById('loading-txt').textContent = loadingMessages[0];
+  msgInterval = setInterval(function() {
+    msgIdx = (msgIdx + 1) % loadingMessages.length;
+    document.getElementById('loading-txt').textContent = loadingMessages[msgIdx];
+  }, 2800);
+}
+
+function stopLoadingMessages() {
+  if (msgInterval) clearInterval(msgInterval);
+}
+
+async function gerarProduto() {
+  if (!validateScreen(4)) return;
+  goTo(5);
+  document.getElementById('loading-area').style.display = 'block';
+  document.getElementById('resultado-area').style.display = 'none';
+  startLoadingMessages();
+
+  try {
+    var resp = await fetch('https://criador-produto.onrender.com/api/gerar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: buildPrompt() }),
+      signal: AbortSignal.timeout(120000)
+    });
+    var data = await resp.json();
+    stopLoadingMessages();
+    var text = data.content && data.content[0] && data.content[0].text ? data.content[0].text : null;
+    if (!text) throw new Error('Resposta inválida. Tente novamente.');
+    renderResultado(text);
+  } catch(e) {
+    stopLoadingMessages();
+    document.getElementById('loading-area').style.display = 'none';
+    document.getElementById('resultado-area').innerHTML = '<div class="error-msg">Não foi possível conectar com a IA. Aguarde 1 minuto e tente novamente — o servidor pode estar iniciando.</div><button class="btn btn-ghost" style="margin-top:16px" onclick="gerarProduto()">Tentar novamente</button>';
+    document.getElementById('resultado-area').style.display = 'block';
+  }
+}
+
+async function regenerar() {
+  document.getElementById('loading-area').style.display = 'block';
+  document.getElementById('resultado-area').style.display = 'none';
+  await gerarProduto();
+}
+
+function parseMd(text) {
+  text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  var lines = text.split('\n');
+  var html = '';
+  var inUl = false;
+  for (var i = 0; i < lines.length; i++) {
+    var l = lines[i].trim();
+    if (!l) { if (inUl) { html += '</ul>'; inUl = false; } continue; }
+    if (l.startsWith('- ') || l.match(/^\d+\. /)) {
+      if (!inUl) { html += '<ul>'; inUl = true; }
+      html += '<li>' + l.replace(/^- |^\d+\. /, '') + '</li>';
+    } else {
+      if (inUl) { html += '</ul>'; inUl = false; }
+      html += '<p>' + l + '</p>';
+    }
+  }
+  if (inUl) html += '</ul>';
+  return html;
+}
+
+function renderResultado(text) {
+  document.getElementById('loading-area').style.display = 'none';
+  var sections = text.split(/###\s+/).filter(function(s) { return s.trim(); });
+  var html = '<div style="margin-bottom:24px"><div class="badge badge-gold">Seu produto criado com IA</div></div>';
+  sections.forEach(function(sec, idx) {
+    var lines = sec.split('\n');
+    var title = lines[0].trim();
+    var body = lines.slice(1).join('\n').trim();
+    if (!title || !body) return;
+    html += '<div class="result-block"><h2>' + title + '</h2>';
+    if (idx === 0) {
+      html += '<div class="highlight-box"><p>' + body + '</p></div>';
+    } else {
+      html += parseMd(body);
+    }
+    html += '</div>';
+  });
+  html += '<div class="result-block" style="background:var(--gold-bg);border-color:var(--gold-border)">';
+  html += '<h2 style="color:var(--gold-dark)">Salve seu resultado</h2>';
+  html += '<p style="color:var(--gold-dark)">Copie o texto acima e cole no seu bloco de notas ou documento. Este é o rascunho do seu produto — agora é hora de executar o próximo passo.</p>';
+  html += '</div>';
+  document.getElementById('resultado-conteudo').innerHTML = html;
+  document.getElementById('resultado-area').style.display = 'block';
+  window.scrollTo(0, 0);
+}
 </script>
 </body>
 </html>
